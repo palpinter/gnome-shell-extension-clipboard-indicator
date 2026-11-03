@@ -22,6 +22,11 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
+// StBoxLayout:vertical was replaced by :orientation in GNOME 48 and removed in GNOME 51
+const VERTICAL_BOX = St.BoxLayout.find_property('orientation')
+    ? { orientation: Clutter.Orientation.VERTICAL }
+    : { vertical: true };
+
 let DELAYED_SELECTION_TIMEOUT = 750;
 let MAX_REGISTRY_LENGTH       = 15;
 let MAX_ENTRY_LENGTH          = 50;
@@ -387,7 +392,7 @@ const ClipboardIndicator = GObject.registerClass({
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
             style_class: 'clipboard-indicator-empty-state',
-            vertical: true
+            ...VERTICAL_BOX
         });
         this.emptyStateSection.add_child(new St.Icon({
             icon_name: INDICATOR_ICON,
@@ -1845,7 +1850,7 @@ const ClipboardIndicator = GObject.registerClass({
             style_class: 'ci-edit-textbox',
             x_expand: true,
             y_expand: true,
-            vertical: true,
+            ...VERTICAL_BOX,
         });
 
         textBox.add_child(clutterText);

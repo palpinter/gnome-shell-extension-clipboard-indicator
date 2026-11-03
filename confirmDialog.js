@@ -3,6 +3,11 @@ import GObject from 'gi://GObject';
 import Clutter from 'gi://Clutter';
 import * as ModalDialog from 'resource:///org/gnome/shell/ui/modalDialog.js';
 
+// StBoxLayout:vertical was replaced by :orientation in GNOME 48 and removed in GNOME 51
+const VERTICAL_BOX = St.BoxLayout.find_property('orientation')
+    ? { orientation: Clutter.Orientation.VERTICAL }
+    : { vertical: true };
+
 export class DialogManager {
     #openDialog;
 
@@ -25,13 +30,11 @@ const ConfirmDialog = GObject.registerClass(
     _init(title, desc, ok_label, cancel_label, callback) {
       super._init();
 
-      let main_box = new St.BoxLayout({
-        vertical: false
-      });
+      let main_box = new St.BoxLayout();
       this.contentLayout.add_child(main_box);
 
       let message_box = new St.BoxLayout({
-        vertical: true
+        ...VERTICAL_BOX
       });
       main_box.add_child(message_box);
 
